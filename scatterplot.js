@@ -148,6 +148,23 @@ function createVis() {
    .attr('height', 50)
    .attr("xlink:href","orange_pop.svg");   
    	
+	svg.selectAll("img").data(data)
+		.enter()
+		.append("svg:image")
+		.attr("x", function (d) {
+			xcoord = (d%4) * (-65);
+			console.log(xcoord);
+			return xcoord;
+		})
+		.attr("y", function (d) {
+			ycoord = (d%4) * (30);
+			console.log(ycoord);
+			return ycoord;
+		})
+   .attr('width', 120)
+   .attr('height', 70)
+   .attr("xlink:href","img_kid.png"); 
+	
   /* .attr('x', function(d,i){
 		if ((i==1) || (i==5) || (i ==9) || (i == 13)){ 	//index 1-4
 			.attr("xlink:href","img_senior.png)
