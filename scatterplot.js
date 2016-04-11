@@ -108,7 +108,7 @@ function createVis() {
       })
       .attr("r", 8)
       .attr("fill",function(d,i){
-        return color(i);
+        return "#CC33FF";
       });
 /*	components = d3.select("components").append("canvas")
 		.attr("width", 100)
@@ -204,26 +204,26 @@ function updateVis(animate) {
 }
 
 function createDropdown() {
-/*	var dropdownDatas = [
+	var dropdownDatas = [
 		{name:"State A", target: "stateA"},
 		{name:"State B", target: "stateB"}
-	];*/
+	];
 
 	var dropdownDatac = [
 		{name:"County A", target: "countyA"},
 		{name:"County B", target: "countyB"}
 	];
-/*	var dropdownGroups = d3.select("#buttons").selectAll(".dropdownGroups")
+	var dropdownGroups = d3.select("#buttons").selectAll(".dropdownGroups")
 		.data(dropdownDatas).enter()
 		.append("span").attr("class", "dropdownGroups");
-	*/
+	
 	var dropdownGroupc = d3.select("#buttons").selectAll(".dropdownGroupc")
 		.data(dropdownDatac).enter()
 		.append("span").attr("class", "dropdownGroupc");
-	//dropdownGroups.append("label").html(function(d){return d.name;});
+	dropdownGroups.append("label").html(function(d){return d.name;});
 	dropdownGroupc.append("label").html(function(d){return d.name;});
 	
-	/*dropdownGroups.append("select")
+	dropdownGroups.append("select")
 		.on("change", function(d) {
 			var selectedIndex = d3.select(this).property('selectedIndex');
 			if (d.target == "stateA") {
@@ -237,7 +237,7 @@ function createDropdown() {
 		.selectAll("option")
 			.data(foodaccess).enter()
 			.append("option")
-			.text(function(d) { return d.state; });*/
+			.text(function(d) { return d.state; });
 			
 	dropdownGroupc.append("select")
 		.on("change", function(d) {
