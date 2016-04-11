@@ -80,7 +80,7 @@ function createVis() {
       .attr("x2", radius);
       
     color = d3.scale.category20();
-
+/*
     var data = [
       [Math.PI / 3, 1],	// pi/3
       [Math.PI / 6, 0.9],	// pi/6
@@ -95,8 +95,8 @@ function createVis() {
       [(2 * Math.PI) / 3, 0],	//2pi/3
       [Math.PI / 2, Math.random()]			//pi/2
     ]
-
-    svg.selectAll("point")
+*/
+    /*svg.selectAll("point")
       .data(data)
       .enter()
       .append("circle")
@@ -106,10 +106,67 @@ function createVis() {
 		console.log(d, line([d]), coors);
         return "translate(" + coors + ")"
       })
-      .attr("r", 8)
+      .attr("r", 16)
       .attr("fill",function(d,i){
         return "#CC33FF";
       });
+	  */
+	  var data = [5213,5213.000011,2112.960734,1102.999998,1055.000004,5213.000011,2112.960734,1102.999998,1055.000004,533.9914285,195.9889424,105.2434788,106.419291,0,0,0,0];
+
+	  //FIX THE INDEX, it is wrong
+	svg.selectAll("img").data(data)
+		.enter()
+		.append("svg:image")
+		.attr("x", function (d) {
+			xcoord = (d%4) * (-65);
+			console.log(xcoord);
+			return xcoord;
+		})
+		.attr("y", function (d) {
+			ycoord = (d%4) * (-65);
+			console.log(ycoord);
+			return ycoord;
+		})
+   .attr('width', 80)
+   .attr('height', 50)
+   .attr("xlink:href","img_senior.png");
+   
+	svg.selectAll("img").data(data)
+		.enter()
+		.append("svg:image")
+		.attr("x", function (d) {
+			xcoord = (d%4) * (65);
+			console.log(xcoord);
+			return xcoord;
+		})
+		.attr("y", function (d) {
+			ycoord = (d%4) * (-30);
+			console.log(ycoord);
+			return ycoord;
+		})
+   .attr('width', 80)
+   .attr('height', 50)
+   .attr("xlink:href","orange_pop.svg");   
+   	
+  /* .attr('x', function(d,i){
+		if ((i==1) || (i==5) || (i ==9) || (i == 13)){ 	//index 1-4
+			.attr("xlink:href","img_senior.png)
+			.attr('y', -50)
+			.attr('x', -50)}
+		else if ((i==4) || (i==8) || (i ==12) || (i == 16)) {
+			.attr("xlink:href","img_kid.png")
+			.attr('y', -100)
+			.attr('x', -100)}
+		else if ((i==2) || (i==6) || (i ==10) || (i == 14)) {
+			.attr("xlink:href","img_pop.png")
+			.attr('y', -150)
+			.attr('x', -150}
+		else if ((i==3) || (i==7) || (i ==11) || (i == 15)) {
+			.attr("xlink:href","img_fam.png")
+			.attr('y', -200)
+			.attr('x', -200)}
+			return i
+;   })*/
 /*	components = d3.select("components").append("canvas")
 		.attr("width", 100)
 		.attr("height", height);
