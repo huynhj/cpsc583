@@ -2,22 +2,14 @@
 idea:
 -select a county
 	-select another county for comparison
-*/
-
-/*ISSUES:
--re-assigned <g> to contain the plot images
--resizing works however selecting the wrong data, because currently the <g> is attached to the foodaccess dataset (containing 2D array of county and values)
--Initial displays no data, even though on a value. However, re-navigating to the value will display plots
--does not support comparisions with another county
--all dropdowns currently controls the same icons
--no legend, no hover values
--issues beyond "Kodiak Island" because of the wrong data selection
--organizing objects to work together because ideally using .data(headers) to set the images with the column, and then retrieving var foodaccess data to re-scale
-*/
+-(displays 4 accessibility groups using icons for each county)
+-legend (color/size)
+-hover to get county/state and value*/
 var headers;
 var foodaccess;
 
-var component,root,svg,color, gr, ga,line;
+var component,root,svg,color, gr, ga,line,foodfilter;
+var selectedIndex =0;
 
 var xScale = d3.scale.linear().range([0, width]);
 var yScale = d3.scale.linear().range([height, 0]);
@@ -111,58 +103,6 @@ function createVis() {
 
 	  var data = [5213,5213.000011,2112.960734,1102.999998,1055.000004,5213.000011,2112.960734,1102.999998,1055.000004,533.9914285,195.9889424,105.2434788,106.419291,0,0,0,0];
 
-/*	  //FIX THE INDEX, it is wrong
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (-65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (-65);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 80)
-   .attr('height', 50)
-   .attr("xlink:href","img_senior.png");
-   
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (-30);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 80)
-   .attr('height', 50)
-   .attr("xlink:href","orange_pop.svg");   
-   	
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (-65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (30);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 120)
-   .attr('height', 70)
-   .attr("xlink:href","img_kid.png"); 
-	*/
 	svg.selectAll("imgMid").data(data)
 		.enter()
 		.append("svg:image")
@@ -172,11 +112,16 @@ function createVis() {
    .attr('height', 70)
    .attr("xlink:href","shopping-cart.png");
    
-   svg.selectAll(".foodacc").data(foodaccess, function(d){return d.values})
+  /*svg.selectAll(".foods").data(foodaccess)
+		.enter()
+		.append("g")
+		.attr("class", "foods");*/
+		
+   svg.selectAll(".foodacc").data(cross(headers,foodaccess))
 		.enter()
 		.append("g")
 		.attr("class", "foodacc")
-		.append("image")
+		.append("svg:image")
 		//["lapophalf","lalowihalf","lakidshalf","laseniorshalf" 	-x,y
 		//"lapop1","lalowi1","lakids1","laseniors1"					x,y
 		//"lapop10","lalowi10","lakids10","laseniors10"				-x,-y
@@ -239,6 +184,7 @@ function updateVis(animate) {
 var myscale = d3.scale.log();
 	var duration = animate ? 500 : 0;
 	var theta = 2 * Math.PI / sizeIndex;
+	foodfilter = foodaccess.filter(function (d){ if(d == valIndex){console.log(d); return d;}});
 	svg.selectAll(".foodacc")
 		.transition()
 		.duration(duration)
@@ -246,18 +192,14 @@ var myscale = d3.scale.log();
 			if (animate) {
 				return i * 10;
 			} else {
-				return 0
+				return 0;
 			};
 		})
 			.select("image")
-			.attr('height', function(d){console.log(d.values[valIndex],myscale(d.values[valIndex])*15+5);//console.log(myscale(i)*15); 		
-			return myscale(d.values[valIndex])*15+5;})
-			.attr('width', function(d){//console.log(myscale(d.values[valIndex])*15+5);//console.log(myscale(i)*15); 
-			return myscale(d.values[valIndex])*15+5;});
-		/*	.attr('height', function(d,i){console.log(d,i, valIndex);//console.log(myscale(i)*15); 
+			.attr('height', function(d,i){console.log(d);//console.log(myscale(i)*15); 
 				return myscale(i)*15+5;})
 			.attr('width', function(d,i){
-				return myscale(i)*15+5;});*/
+				return myscale(i)*15+5;});
 			
 }
 
@@ -299,9 +241,10 @@ function createDropdown() {
 			
 	dropdownGroupc.append("select")
 		.on("change", function(d) {
-			var selectedIndex = d3.select(this).property('selectedIndex');
+			selectedIndex = d3.select(this).property("value");
 			if (d.target == "countyA") {
-				valIndex = selectedIndex;}
+				valIndex = selectedIndex;
+				console.log(valIndex);}
 			else if (d.target == "countyB") {
 				valIndex = selectedIndex;
 			}
@@ -312,3 +255,11 @@ function createDropdown() {
 			.append("option")
 			.text(function(d) { return d.county; });			
 }
+/*
+function cross(a, b) {
+  var c = [], n = a.length, m = b.length, i, j;
+	for (i = 1; ++i < n;) 
+		for (j = 1; ++j < m;) 
+			c.push(x: a[i], i: i, y: b[j], j: j});
+  return c;
+}*/

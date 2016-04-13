@@ -2,22 +2,14 @@
 idea:
 -select a county
 	-select another county for comparison
-*/
-
-/*ISSUES:
--re-assigned <g> to contain the plot images
--resizing works however selecting the wrong data, because currently the <g> is attached to the foodaccess dataset (containing 2D array of county and values)
--Initial displays no data, even though on a value. However, re-navigating to the value will display plots
--does not support comparisions with another county
--all dropdowns currently controls the same icons
--no legend, no hover values
--issues beyond "Kodiak Island" because of the wrong data selection
--organizing objects to work together because ideally using .data(headers) to set the images with the column, and then retrieving var foodaccess data to re-scale
-*/
+-(displays 4 accessibility groups using icons for each county)
+-legend (color/size)
+-hover to get county/state and value*/
 var headers;
 var foodaccess;
 
 var component,root,svg,color, gr, ga,line;
+var selectedIndex =0;
 
 var xScale = d3.scale.linear().range([0, width]);
 var yScale = d3.scale.linear().range([height, 0]);
@@ -111,58 +103,6 @@ function createVis() {
 
 	  var data = [5213,5213.000011,2112.960734,1102.999998,1055.000004,5213.000011,2112.960734,1102.999998,1055.000004,533.9914285,195.9889424,105.2434788,106.419291,0,0,0,0];
 
-/*	  //FIX THE INDEX, it is wrong
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (-65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (-65);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 80)
-   .attr('height', 50)
-   .attr("xlink:href","img_senior.png");
-   
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (-30);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 80)
-   .attr('height', 50)
-   .attr("xlink:href","orange_pop.svg");   
-   	
-	svg.selectAll("img").data(data)
-		.enter()
-		.append("svg:image")
-		.attr("x", function (d) {
-			xcoord = (d%4) * (-65);
-			//console.log(xcoord);
-			return xcoord;
-		})
-		.attr("y", function (d) {
-			ycoord = (d%4) * (30);
-			//console.log(ycoord);
-			return ycoord;
-		})
-   .attr('width', 120)
-   .attr('height', 70)
-   .attr("xlink:href","img_kid.png"); 
-	*/
 	svg.selectAll("imgMid").data(data)
 		.enter()
 		.append("svg:image")
@@ -171,12 +111,12 @@ function createVis() {
    .attr('width', 120)
    .attr('height', 70)
    .attr("xlink:href","shopping-cart.png");
-   
-   svg.selectAll(".foodacc").data(foodaccess, function(d){return d.values})
+   //foodfilter = foodaccess.filter(function (d){ return }
+   svg.selectAll(".foodacc").data(foodaccess)
 		.enter()
 		.append("g")
 		.attr("class", "foodacc")
-		.append("image")
+		.append("svg:image")
 		//["lapophalf","lalowihalf","lakidshalf","laseniorshalf" 	-x,y
 		//"lapop1","lalowi1","lakids1","laseniors1"					x,y
 		//"lapop10","lalowi10","lakids10","laseniors10"				-x,-y
@@ -250,10 +190,10 @@ var myscale = d3.scale.log();
 			};
 		})
 			.select("image")
-			.attr('height', function(d){console.log(d.values[valIndex],myscale(d.values[valIndex])*15+5);//console.log(myscale(i)*15); 		
-			return myscale(d.values[valIndex])*15+5;})
-			.attr('width', function(d){//console.log(myscale(d.values[valIndex])*15+5);//console.log(myscale(i)*15); 
-			return myscale(d.values[valIndex])*15+5;});
+			.attr('height', function(d,i){console.log(d.values[i],myscale(d.values[i])*15+5);//console.log(myscale(i)*15); 		
+			return myscale(d.values[i])*15+5;})
+			.attr('width', function(d,i){console.log(myscale(d.values[i])*15+5);//console.log(myscale(i)*15); 
+			return myscale(d.values[i])*15+5;});
 		/*	.attr('height', function(d,i){console.log(d,i, valIndex);//console.log(myscale(i)*15); 
 				return myscale(i)*15+5;})
 			.attr('width', function(d,i){
@@ -262,26 +202,26 @@ var myscale = d3.scale.log();
 }
 
 function createDropdown() {
-	var dropdownDatas = [
+/*	var dropdownDatas = [
 		{name:"State A", target: "stateA"},
 		{name:"State B", target: "stateB"}
 	];
-
+*/
 	var dropdownDatac = [
 		{name:"County A", target: "countyA"},
 		{name:"County B", target: "countyB"}
 	];
-	var dropdownGroups = d3.select("#buttons").selectAll(".dropdownGroups")
+	/*var dropdownGroups = d3.select("#buttons").selectAll(".dropdownGroups")
 		.data(dropdownDatas).enter()
 		.append("span").attr("class", "dropdownGroups");
-	
+	*/
 	var dropdownGroupc = d3.select("#buttons").selectAll(".dropdownGroupc")
 		.data(dropdownDatac).enter()
 		.append("span").attr("class", "dropdownGroupc");
-	dropdownGroups.append("label").html(function(d){return d.name;});
+	//dropdownGroups.append("label").html(function(d){return d.name;});
 	dropdownGroupc.append("label").html(function(d){return d.name;});
 	
-	dropdownGroups.append("select")
+	/*dropdownGroups.append("select")
 		.on("change", function(d) {
 			var selectedIndex = d3.select(this).property('selectedIndex');
 			if (d.target == "stateA") {
@@ -296,10 +236,10 @@ function createDropdown() {
 			.data(foodaccess).enter()
 			.append("option")
 			.text(function(d) { return d.state; });
-			
+			*/
 	dropdownGroupc.append("select")
 		.on("change", function(d) {
-			var selectedIndex = d3.select(this).property('selectedIndex');
+			selectedIndex = d3.select(this).property('selectedIndex');
 			if (d.target == "countyA") {
 				valIndex = selectedIndex;}
 			else if (d.target == "countyB") {
